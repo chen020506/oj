@@ -1,95 +1,30 @@
 #include<iostream>
+#include<string>
 using namespace std;
-struct note
-{
-    int x;
-    int y;
-};
-char a[20][21];
-int getnum(int i,int j)
-{
-    int sum,x,y;
-    sum=0;
-    x=i,y=j;
-    while(a[x][y]!='#')
-    {
-        if(a[x][y]=='G')
-            sum++;
-        x--;
-    }
-    x=i,y=j;
-    while(a[x][y]!='#')
-    {
-        if(a[x][y]=='G')
-            sum++;
-        x++;
-    }
-    x=i,y=j;
-    while(a[x][y]!='#')
-    {
-        if(a[x][y]=='G')
-            sum++;
-        y--;
-    }
-    x=i,y=j;
-    while(a[x][y]!='#')
-    {
-        if(a[x][y]=='G')
-            sum++;
-        y++;
-    }
-    return sum;
-}
+char a[1010][1010];
+
 int main ()
 {
-    struct note que[401];
-    int head,tail;
-    int book[20][20]={0};
-    int i,j,k,sum,mmax=0,mx,my,n,m,startx,starty,tx,ty;
-    int next[4][2]={
-        {0,1},
-        {1,0},
-        {0,-1},
-        {-1,0}
-    };
-    cin>>n>>m>>startx>>starty;
-    for(i=0;i<n;i++)
-        cin>>a[i];
-    //队列初始化
-    head=1,tail=1;
-    que[tail].x=startx;
-    que[tail].y=starty;
-    tail++;
-    book[startx][starty]=1;
-    mmax=getnum(startx,starty);
-    mx=startx;
-    my=starty;
-    while(head<tail)
-    {
-        for(k=0;k<3;k++)
+    int n;
+    cin>>n;
+    getchar();
+    string str;
+    getline(cin,str);
+   //先计算一下一共会有多少行
+    int k=0;
+    int m=str.size()/n;
+    for(int j=n;j>=1;j--)//从右往左
+        for(int i=1;i<=m;i++)//从上往下
         {
-            tx=que[head].x+next[k][0];
-            ty=que[head].y+next[k][1];
-
-            if(tx<0 || tx>n-1 || ty<0 || ty>m-1)
-                continue;
-            if(a[tx][ty]=="."&&book[tx][ty]==0)
-            {
-                book[tx][ty]=1;
-                que[tail].x=tx;
-                que[tail].y=ty;
-                tail++;
-                sum=getnum(tx,ty);
-                if(sum>mmax)
-                {
-                    mmax=sum;
-                    mx=tx;
-                    my=ty;
-                }
-            }
+            a[j][i]=str[k];
+            k++;
         }
-        head++;
+    for(int i=1;i<=m+10;i++){
+        for(int j=1;j<n+10;j++)
+            if(a[i][j]!='0')
+                cout<<a[i][j];
+        cout<<endl;
     }
-    printf("%d %d =%d",mx,my,mmax);
+        
     return 0;
 }
