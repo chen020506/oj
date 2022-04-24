@@ -1,39 +1,25 @@
-//获得之前的字典序
 #include<iostream>
 #include<algorithm>
 using namespace std;
-int a[3]={3,2,1};
 int main ()
 {
-    do
-    {
-        cout<<a[0]<<" "<<a[1]<<" "<<a[2]<<endl;
-    }while(prev_permutation(a,a+3));
+    int dis[10],i,k,n,m,u[10],v[10],w[10];
+    int inf=99999999;
+    cin>>n>>m;
+    
+    for(i=1;i<=m;i++)
+        cin>>u[i]>>v[i]>>w[i];
+    for(i=1;i<=n;i++)
+        dis[i]=inf;
+    dis[1]=0;
+    
+    //bellman-ford
+    for(k=1;k<=n-1;k++)
+        for(i=1;i<=m;i++)
+            dis[v[i]]=min(dis[v[i]],dis[u[i]]+w[i]);
+    
+    for(i=1;i<=n;i++)
+        cout<<dis[i]<<" ";
+    cout<<endl;
+    return 0;
 }
-  
-3 2 1
-3 1 2
-2 3 1
-2 1 3
-1 3 2
-1 2 3
-
-//获得之后的字典序
-#include<iostream>
-#include<algorithm>
-using namespace std;
-int a[3]={1,2,3};
-int main ()
-{
-    do
-    {
-        cout<<a[0]<<" "<<a[1]<<" "<<a[2]<<endl;
-    }while(next_permutation(a,a+3));
-}
-  
-1 2 3
-1 3 2
-2 1 3
-2 3 1
-3 1 2
-3 2 1
