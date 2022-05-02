@@ -1,42 +1,58 @@
 #include<iostream>
+#include<algorithm>
 using namespace std;
-int f[100];
+int h[100];
+int n;
 
-void init(int n)
+void siftdown(int i)
 {
-    for(int i=1;i<=n;i++)
-        f[i]=i;
+    int t,flag=0;
+    while(i*2<=n&&flag==0)
+    {
+        if(h[i]>h[i*2])
+            t=i*2;
+        else 
+            t=i;
+        if(i*2+1<=n)
+        {
+            if(h[t]>h[i*2+1])
+                t=i*2+1;
+        }
+        if(t!=i)
+            {
+                swap(h[t],h[i]);
+                i=t;
+            }
+        else
+            flag=1;
+    }
 }
-int getf(int v)
+void creat()
 {
-    if(f[v]==v)
-        return v;
-    else
-        return f[v]=getf(f[v]);
+    int i;
+    for(i=n/2;i>=1;i--)
+        siftdown(i);
 }
-void merge(int a,int b)
+int deletemax()
 {
-    int t1,t2;
-    t1=getf(a);
-    t2=getf(b);
-    if(t1!=t2)
-        f[t2]=t1;
+    int t;
+    t=h[1];
+    h[1]=h[n];
+    n--;
+    siftdown(1);
+    return t;
 }
 int main ()
 {
-    int n,m;
-    int sum=0;
-    cin>>n>>m;
-    init(n);
-    while(m--)
-    {
-        int a,b;
-        cin>>a>>b;
-        merge(a,b);
-    }
-    for(int i=1;i<=n;i++)
-        if(f[i]==i)
-            sum++;
-    cout<<sum<<endl;
+    int i,num;
+    cin>>num;
+    for(i=1;i<=num;i++)
+        cin>>h[i];
+    n=num;
+    creat();
+    
+    for(i=1;i<=num;i++)
+        cout<<deletemax()<<" ";
+    
     return 0;
 }
