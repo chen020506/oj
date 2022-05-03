@@ -11,18 +11,14 @@ void siftdown(int i)
     {
         if(h[i]>h[i*2])
             t=i*2;
-        else 
+        else
             t=i;
         if(i*2+1<=n)
-        {
             if(h[t]>h[i*2+1])
                 t=i*2+1;
-        }
-        if(t!=i)
-            {
-                swap(h[t],h[i]);
-                i=t;
-            }
+        if(t!=i){
+            swap(h[t],h[i]);
+            i=t;}
         else
             flag=1;
     }
@@ -33,14 +29,14 @@ void creat()
     for(i=n/2;i>=1;i--)
         siftdown(i);
 }
-int deletemax()
+void heapsort()
 {
-    int t;
-    t=h[1];
-    h[1]=h[n];
-    n--;
-    siftdown(1);
-    return t;
+    while(n>1)
+    {
+        swap(h[1],h[n]);
+        n--;
+        siftdown(1);
+    }
 }
 int main ()
 {
@@ -50,9 +46,9 @@ int main ()
         cin>>h[i];
     n=num;
     creat();
-    
+    heapsort();
     for(i=1;i<=num;i++)
-        cout<<deletemax()<<" ";
+        cout<<h[i]<<" ";
     
     return 0;
 }
