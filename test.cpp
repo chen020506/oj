@@ -137,7 +137,7 @@ void sort_list(PNODE pHead)
 		}
 	}
 } 
-
+//加法可以将两个链表合并，减法不行
 int main ()
 {
 	int val;
