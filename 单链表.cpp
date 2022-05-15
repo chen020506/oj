@@ -168,5 +168,6 @@ int main ()
     else
     	printf("链表不空！\n");
     	
+	return 0;
 }
 
