@@ -8,7 +8,7 @@ bool arr[1010];//用来判断这个书号出现过吗
 class Book
 {
     public:
-        Book(int id,char op,int tt){
+        Book(int id,char op,int tt){ 
         if(op=='S')
             bool_s=tt;
         else if (op=='E')
