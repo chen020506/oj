@@ -1,83 +1,68 @@
-// 时间：2022.05.17 23点26分
-// 傻x题目
 #include<iostream>
 #include<vector>
-#include<string.h>
+#include<algorithm>
 using namespace std;
-bool arr[1010];//用来判断这个书号出现过吗
-class Book
-{
-    public:
-        Book(int id,char op,int tt){ 
-        if(op=='S')
-            bool_s=tt;
-        else if (op=='E')
-            bool_e=tt;
-        m_id=id;
-    }
-    int m_id;
-    int bool_s=-1;//借书时间 这里千万不能初始化为0，因为有可能借书时间为00：00这种傻x数据
-    int bool_e=0;//还书
+struct Book{
+    int m_id;//书号  
+    int s_t=0;//借书时间
+    int e_t=0;//还书时间
+    int m_bool=0;//用来判断是不是无效记录，书被借或者还书都会加一，当为2的时候被认为有效数据
 };
-void func(vector<Book>mv)
-{
-    int num=0;//记录有效书的个数
-    int sum=0;
-    for(int i=0;i<mv.size();i++)//遍历数组
-        if((mv[i].bool_s!=-1)&&(mv[i].bool_e!=0)&&(mv[i].bool_s!=mv[i].bool_e)){//借书和还书都完整才算有效书
-            num++;
-            //cout<<"借书："<<mv[i].bool_s<<" 还书："<<mv[i].bool_e<<endl;
-            sum+=mv[i].bool_e-mv[i].bool_s;
-        }
-    if(num==0){//当没有有效书的时候需要特判，否则会除以0导致报浮点错误
-        cout<<0<<" "<<0<<endl;
-        return;
-    }
-    //此处要进行四舍五入
-   // cout<<num<<" "<<sum<<endl;
-    float d = (float)num;
-	float e = (float) sum;
-	float f = e / d;
-    //cout << int(f + 0.5) <<endl;
-    printf("%d %d\n",num,int(f + 0.5));
-}
-
+int arr[1010];//用这个数组用来判断这本书有没有借出，1代表借出
 int main ()
 {
-    int n;
+    int i,n;//n天
     cin>>n;
-    vector<Book>mv;
-    int i=0;//用来记录第几天
-    while(1)
-    {
-        int id,hh,mm;
-        char op;
-        scanf("%d %c %d:%d",&id,&op,&hh,&mm);
-        if(id==0){
-            if(i==n)
-                break;//如果已经计算完n天了则退出循环
-            func(mv);   
-            i++;//进行下一天
-            mv.clear();//将数组清空
-            memset(arr,0,sizeof arr);//将判断数组初始化
-            continue;
+    while(n--){
+        vector<struct Book>mv;//存放书信息的数组
+        mv.clear();
+        while(1){
+            int id,hh,mm;
+            char op;
+            scanf("%d %c %d:%d",&id,&op,&hh,&mm);
+            if(id==0) break;//当书号为0的时候退出这一天，之后输出这一天的信息
+            if(op=='S'&&arr[id]==0){//借书
+            //if(op=='S'){//借书
+                arr[id]=1;//这本书被借出
+                struct Book book;
+                book.m_id=id;
+                book.s_t=hh*60+mm;
+                book.m_bool++;
+                
+                mv.push_back(book);//将这个信息放入数组中
+            }
+            else if(op=='E'){//还书
+                //必须先借出才可以还书 如果这本书还没有被借出去则跳过这条信息
+                if(arr[id]==0) continue;
+                //找到这本书在vector中的位置i
+                for( i=0;i<mv.size();i++)
+                    if(mv[i].m_id==id)
+                        break;
+                arr[id]=0;//这本书已归还
+                mv[i].e_t=hh*60+mm;
+                mv[i].m_bool++;
+            }
+            
         }
-        //看这个书号出现过吗
-        if(arr[id]==1){//出现过
-            for(int i=0;i<mv.size();i++){
-                if(id==mv[i].m_id){
-                    if(op=='S'&&mv[i].bool_e==0) mv[i].bool_s=hh*60+mm;//同一本书被借多次取最后一次借书时间为准 
-                    //并且之前没出现过这本书的还书信息
-                    else if(op=='E'&&mv[i].bool_e==0) mv[i].bool_e=hh*60+mm;
-                }   
+        //找到有效数据
+        int ret=1,num=0;//ret读者借书次数，num阅读总时间
+        for(i=0;i<mv.size();i++){
+            if(mv[i].m_bool%2==0){
+                ret=ret*mv[i].m_bool/2;
+                num+=mv[i].e_t-mv[i].s_t;
             }
         }
-        else if(arr[id]==0){//这个书名没出现过
-            Book book(id,op,hh*60+mm);
-            mv.push_back(book);
-            arr[id]=1;
+        //此处的平均阅读时间需要四舍五入 不过首先需要特判等于0的情况
+        if(ret==0){
+            printf("0 0\n");
+            continue;
         }
-            
+        float temp;
+        temp=num/(ret*1.0);
+        if(temp>=(num/ret+0.5))
+            cout<<ret<<" "<<num/ret+1<<endl;
+        else 
+            cout<<ret<<" "<<num/ret<<endl;
     }
     return 0;
 }
