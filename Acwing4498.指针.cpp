@@ -30,3 +30,32 @@ int main ()
         return 0;}
     else cout<<"NO"<<endl;
 }
+// 第二种：二进制枚举
+/*
+int n;
+int w[N];
+int main ()
+{
+    cin>>n;
+    for(int i=0;i<n;i++) cin>>w[i];
+    
+    bool res=false;
+    for(int i=0;i< 1<<n;i++)
+    {
+        int s=0;
+        for(int j=0;j<n;j++)
+            if(i>>j&1)
+                s+=w[i];
+            else
+                s-=w[i];
+        if(s%360==0)
+        {
+            res=true;
+            break;
+        }
+    }
+    if(res) puts("YES");
+    else puts("NO");
+}
+
+*/
